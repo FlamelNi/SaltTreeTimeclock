@@ -1,27 +1,36 @@
-import { useNavigate } from "react-router-dom";
-
+import React, { useState } from "react";
+import Button from "react-bootstrap/Button";
 import "./LandingPage.css";
-import { useEffect } from "react";
 
-export default function LandingPage() {
-  const navigate = useNavigate();
+const LandingPage: React.FC = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Logging in with:", { username, password });
+    // Add logic here
+  };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <div className="login-container">
-        <h1 className="logo">Peekatime</h1>
-        <div className="tagline">
-          <p>Share schedules,</p>
-          <p>Plan meetings,</p>
-          <p>With friends</p>
-        </div>
+    <div className="login-container">
+      <form className="login-form" onSubmit={handleSubmit}>
+        <label className="login-label">
+          Username
+          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} className="login-input" required />
+        </label>
 
-        <h2 className="login-prompt">Login with Google account</h2>
+        <label className="login-label">
+          Password
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="login-input" required />
+        </label>
 
-        <p className="agreement">
-          By clicking continue, you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>
-        </p>
-      </div>
+        <Button type="submit" className="login-button" variant="dark">
+          Sign In
+        </Button>
+      </form>
     </div>
   );
-}
+};
+
+export default LandingPage;

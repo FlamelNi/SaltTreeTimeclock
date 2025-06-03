@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import Axios from "axios";
 import LandingPage from "./pages/LandingPage/LandingPage";
+import UserReport from "./pages/UserReport/UserReport";
 
 function App() {
   // const [cookies, setCookies] = useCookies(["temp_key", "site_id"]);
@@ -15,6 +16,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/test" element={<UserReport />} />
     </Routes>
   );
 }
