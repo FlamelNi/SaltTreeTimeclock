@@ -30,6 +30,25 @@
   border-radius: 8px;
   padding: 0.6rem 1rem;
   font-weight: bold;
+  color: #222;
+}
+
+.user-dropdown .dropdown-toggle.user-button {
+  background: #ccc !important;
+  color: #222;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-weight: bold;
+}
+
+.user-dropdown .dropdown-menu {
+  min-width: 160px;
+}
+
+.user-dropdown .dropdown-item {
+  font-size: 1rem;
+  padding: 0.5rem 1.2rem;
 }
 
 /* Remove .controls since layout is now .control-row */

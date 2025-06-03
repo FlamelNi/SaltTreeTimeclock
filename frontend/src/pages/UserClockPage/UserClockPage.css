@@ -1,0 +1,49 @@
+.clock-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: sans-serif;
+  position: relative;
+}
+
+.clocked-in-since {
+  position: absolute;
+  top: 20%;
+  left: 5%;
+  font-size: 1.2rem;
+}
+
+.clock-status {
+  text-align: center;
+}
+
+.clock-status h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.clock-now {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.clock-buttons button {
+  font-size: 1rem;
+  padding: 0.6rem 1.2rem;
+  margin: 0 0.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.clock-buttons button:disabled {
+  background-color: #ddd;
+  color: #666;
+}
+
+.clock-buttons button:not(:disabled) {
+  background-color: #222;
+  color: white;
+}

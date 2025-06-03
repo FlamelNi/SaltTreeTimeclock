@@ -1,17 +1,24 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
+import Dropdown from "react-bootstrap/Dropdown";
 import "./UserReport.css";
 
 const UserReport: React.FC = () => {
   return (
     <div className="report-container">
       <div className="report-header">
-        {/* Row 1: User and Log out */}
+        {/* Row 1: User dropdown and Log out */}
         <div className="header-row user-logout-row">
           <div>
-            <Button className="user-button" variant="outline-secondary">
-              Ryan Kong (ryank226)
-            </Button>
+            <Dropdown className="user-dropdown">
+              <Dropdown.Toggle variant="outline-secondary" className="user-button">
+                Ryan Kong (ryank226)
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item href="#/profile">Profile</Dropdown.Item>
+                {/* Add more dropdown items as needed */}
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
           <div>
             <Button className="logout-button" variant="outline-danger">
