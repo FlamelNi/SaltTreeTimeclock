@@ -17,7 +17,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/test" element={<UserReport />} />
+      <Route path="/test" element={<UserReport user_list={["Ryan", "Jae Min"]} />} />
       <Route path="/test2" element={<UserClockPage />} />
     </Routes>
   );

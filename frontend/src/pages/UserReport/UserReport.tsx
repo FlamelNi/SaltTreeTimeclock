@@ -2,30 +2,17 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import "./UserReport.css";
+import UserBar from "../../components/UserBar/UserBar";
 
-const UserReport: React.FC = () => {
+interface Props {
+  user_list: String[];
+}
+const UserReport: React.FC<Props> = ({ user_list }) => {
   return (
     <div className="report-container">
       <div className="report-header">
         {/* Row 1: User dropdown and Log out */}
-        <div className="header-row user-logout-row">
-          <div>
-            <Dropdown className="user-dropdown">
-              <Dropdown.Toggle variant="outline-secondary" className="user-button">
-                Ryan Kong (ryank226)
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item href="#/profile">Profile</Dropdown.Item>
-                {/* Add more dropdown items as needed */}
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
-          <div>
-            <Button className="logout-button" variant="outline-danger">
-              🔁 Log out
-            </Button>
-          </div>
-        </div>
+        <UserBar is_dropdown={true} user_list={user_list} />
 
         {/* Row 2: Current Rate, Change Rate, Change Password, Print */}
         <div className="header-row control-row">
