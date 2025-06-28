@@ -19,10 +19,15 @@ function App() {
   useEffect(() => {
     get_all_employees().then(setEmployeeList);
   }, []);
+
+  useEffect(() => {
+    console.log(employeeList);
+  }, [employeeList]);
+
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/test" element={<UserReport user_list={["Ryan", "Jae Min"]} />} />
+      <Route path="/test" element={<UserReport user_list={employeeList} />} />
       <Route path="/test2" element={<UserClockPage />} />
     </Routes>
   );

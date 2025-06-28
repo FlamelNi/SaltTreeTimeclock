@@ -24,10 +24,12 @@ export async function get_all_employees(): Promise<Employee[]> {
   return employees;
 }
 
-// await addDoc(collection(db, "employees"), {
-//   name: "Ryan Kong",
-//   username: "ryank226",
-//   password: "abc123", // hash this in real app!
-//   pay_rate: 18.5,
-//   is_admin: true,
-// });
+export async function add_new_employee_test() {
+  await addDoc(collection(db, "employees"), {
+    name: "Jae Min",
+    username: "jaemin7176",
+    password: "abc123", // hash this in real app!
+    pay_rate: 17.8,
+    is_admin: false,
+  });
+}

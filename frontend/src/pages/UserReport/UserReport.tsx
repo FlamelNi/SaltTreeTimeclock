@@ -1,18 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import "./UserReport.css";
 import UserBar from "../../components/UserBar/UserBar";
+import { Employee } from "../../datatype";
+import { add_new_employee_test } from "../../firestore";
 
 interface Props {
-  user_list: String[];
+  user_list: Employee[];
 }
 const UserReport: React.FC<Props> = ({ user_list }) => {
+  const [curr_user, setCurr_user] = useState(null as Employee | null);
+
+  useEffect(() => {
+    if (0 < user_list.length) {
+      setCurr_user(user_list[0]);
+    }
+  }, [user_list]);
+
   return (
     <div className="report-container">
       <div className="report-header">
         {/* Row 1: User dropdown and Log out */}
-        <UserBar is_dropdown={true} user_list={user_list} />
+        <UserBar is_dropdown={true} user_list={user_list} curr_user={curr_user} curr_user_set={setCurr_user} />
 
         {/* Row 2: Current Rate, Change Rate, Change Password, Print */}
         <div className="header-row control-row">
@@ -65,6 +75,7 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
       </table>
 
       <div className="total-earnings">Total Earnings: $1237</div>
+      {/* <Button onClick={add_new_employee_test}>Add Test</Button> */}
     </div>
   );
 };
