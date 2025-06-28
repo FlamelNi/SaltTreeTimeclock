@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, Timestamp } from "firebase/firestore";
 import { Employee } from "./datatype";
 
 const firebaseConfig = {
@@ -19,7 +19,7 @@ export async function get_all_employees(): Promise<Employee[]> {
   const snapshot = await getDocs(collection(db, "employees"));
   const employees = snapshot.docs.map((doc) => {
     const data = doc.data();
-    return new Employee(doc.id, data.is_admin, data.name, data.password, data.pay_rate, data.username);
+    return new Employee(doc.id, data.is_admin, data.name, data.password, data.pay_rate, data.username, false, Timestamp.now());
   });
   return employees;
 }
