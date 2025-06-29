@@ -9,10 +9,10 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { Timestamp } from "firebase/firestore";
 
-interface Props {
-  user_list: Employee[];
-}
-const UserReport: React.FC<Props> = ({ user_list }) => {
+import { get_all_employees } from "../../firestore";
+
+const UserReport: React.FC = () => {
+  const [user_list, setUser_list] = useState<Employee[]>([]);
   const [curr_user, setCurr_user] = useState(null as Employee | null);
 
   // Use local time to avoid timezone issues (e.g., when .toISOString() advances date)
@@ -71,6 +71,16 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
     return (hrs * rate).toFixed(2);
   }
 
+  // Reload users list from firebase
+  const reloadUserList = async () => {
+    const newList = await get_all_employees();
+    setUser_list(newList);
+  };
+
+  useEffect(() => {
+    reloadUserList();
+  }, []);
+
   useEffect(() => {
     if (0 < user_list.length) {
       setCurr_user(user_list[0]);
@@ -94,7 +104,14 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
     <div className="report-container">
       <div className="report-header">
         {/* Row 1: User dropdown and Log out */}
-        <UserBar is_dropdown={true} is_user_change={true} user_list={user_list} curr_user={curr_user} curr_user_set={setCurr_user} />
+        <UserBar
+          is_dropdown={true}
+          is_user_change={true}
+          user_list={user_list}
+          curr_user={curr_user}
+          curr_user_set={setCurr_user}
+          onUserListChange={reloadUserList}
+        />
 
         {/* Row 2: Current Rate, Change Rate, Change Password, Print */}
         <div className="header-row control-row">
