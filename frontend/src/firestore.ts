@@ -13,7 +13,7 @@ import {
   updateDoc,
   doc,
   setDoc,
-  deleteDoc
+  deleteDoc,
 } from "firebase/firestore";
 
 // Update an employee's rate
@@ -60,14 +60,32 @@ export async function get_all_employees(): Promise<Employee[]> {
   return employees;
 }
 
-export async function add_new_employee_test() {
+// Add new employee with hashed password
+export async function add_new_employee(name: string, username: string, password_hash: string, pay_rate: number, is_admin = false): Promise<void> {
   await addDoc(collection(db, "employees"), {
-    name: "Jae Min",
-    username: "jaemin7176",
-    password: "abc123", // hash this in real app!
-    pay_rate: 17.8,
-    is_admin: false,
+    name,
+    username,
+    password: password_hash,
+    pay_rate,
+    is_admin,
   });
+}
+
+// Update existing employee info (optionally new password hash)
+export async function update_employee(
+  employee_id: string,
+  data: { name?: string; username?: string; password_hash?: string; pay_rate?: number; is_admin?: boolean }
+): Promise<void> {
+  const { password_hash, ...rest } = data;
+  const update_data: any = { ...rest };
+  if (password_hash) update_data.password = password_hash;
+  const employeeRef = doc(collection(db, "employees"), employee_id);
+  await updateDoc(employeeRef, update_data);
+}
+
+// Delete employee by ID (does NOT touch work_hours)
+export async function delete_employee(employee_id: string): Promise<void> {
+  await deleteDoc(doc(db, "employees", employee_id));
 }
 
 // Query work_hour table by employee and date range

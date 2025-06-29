@@ -4,13 +4,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import "./UserReport.css";
 import UserBar from "../../components/UserBar/UserBar";
 import { Employee, WorkHour } from "../../datatype";
-import {
-  add_new_employee_test,
-  get_work_hours_for_employee_between,
-  update_employee_rate,
-  add_new_work_hour,
-  delete_work_hour,
-} from "../../firestore";
+import { get_work_hours_for_employee_between, update_employee_rate, add_new_work_hour, delete_work_hour } from "../../firestore";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { Timestamp } from "firebase/firestore";
@@ -100,7 +94,7 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
     <div className="report-container">
       <div className="report-header">
         {/* Row 1: User dropdown and Log out */}
-        <UserBar is_dropdown={true} user_list={user_list} curr_user={curr_user} curr_user_set={setCurr_user} />
+        <UserBar is_dropdown={true} is_user_change={true} user_list={user_list} curr_user={curr_user} curr_user_set={setCurr_user} />
 
         {/* Row 2: Current Rate, Change Rate, Change Password, Print */}
         <div className="header-row control-row">
@@ -222,7 +216,6 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
       <div className="total-earnings">
         Total Earnings: ${work_hours.reduce((acc, wh) => acc + parseFloat(getEarnings(wh.time_in, wh.time_out, wh.pay_rate)), 0).toFixed(2)}
       </div>
-      {/* <Button onClick={add_new_employee_test}>Add Test</Button> */}
 
       {/* Change Rate Modal */}
       <Modal show={showChangeRateModal} onHide={() => setShowChangeRateModal(false)}>
