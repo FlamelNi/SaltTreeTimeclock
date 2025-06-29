@@ -237,7 +237,7 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={() => setShowChangeRateModal(false)}>
+          <Button variant="secondary" onClick={() => setShowChangeRateModal(false)}>
             Cancel
           </Button>
           <Button
@@ -293,7 +293,7 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={() => setShowAddTimeModal(false)}>
+          <Button variant="secondary" onClick={() => setShowAddTimeModal(false)}>
             Cancel
           </Button>
           <Button
@@ -372,7 +372,7 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={() => setShowDeleteModal(false)} disabled={deleting}>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)} disabled={deleting}>
             Cancel
           </Button>
           <Button
