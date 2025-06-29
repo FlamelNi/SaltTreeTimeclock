@@ -88,6 +88,15 @@ export async function delete_employee(employee_id: string): Promise<void> {
   await deleteDoc(doc(db, "employees", employee_id));
 }
 
+// Find a single employee by username (for login)
+export async function get_employee_by_username(username: string): Promise<Employee | null> {
+  const q = query(collection(db, "employees"), where("username", "==", username));
+  const snap = await getDocs(q);
+  if (snap.empty) return null;
+  const data = snap.docs[0].data();
+  return new Employee(snap.docs[0].id, data.is_admin, data.name, data.password, data.pay_rate, data.username, false, Timestamp.now());
+}
+
 // Query work_hour table by employee and date range
 export async function get_work_hours_for_employee_between(employee_id: string, starting: string, ending: string): Promise<WorkHour[]> {
   // Convert YYYY-MM-DD to proper Timestamps

@@ -27,8 +27,9 @@ interface Props {
   curr_user_set: Function;
   // Optionally, a callback for parent to refresh/reload users
   onUserListChange?: () => void;
+  onLogout?: () => void;
 }
-const UserBar: React.FC<Props> = ({ is_dropdown, is_user_change, user_list, curr_user, curr_user_set, onUserListChange }) => {
+const UserBar: React.FC<Props> = ({ is_dropdown, is_user_change, user_list, curr_user, curr_user_set, onUserListChange, onLogout }) => {
   // Modal and form state
   const [showUserModal, setShowUserModal] = useState(false);
   const [userModalMode, setUserModalMode] = useState<"new" | "edit">("new");
@@ -185,7 +186,13 @@ const UserBar: React.FC<Props> = ({ is_dropdown, is_user_change, user_list, curr
             <></>
           )}
 
-          <Button className="logout-button" variant="outline-danger">
+          <Button
+            className="logout-button"
+            variant="outline-danger"
+            onClick={() => {
+              if (onLogout) onLogout();
+            }}
+          >
             Log out
           </Button>
         </div>

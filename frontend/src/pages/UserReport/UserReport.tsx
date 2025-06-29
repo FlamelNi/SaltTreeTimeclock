@@ -11,9 +11,13 @@ import { Timestamp } from "firebase/firestore";
 
 import { get_all_employees } from "../../firestore";
 
-const UserReport: React.FC = () => {
+interface Props {
+  curr_user: Employee | null;
+  onLogout: () => void;
+}
+const UserReport: React.FC<Props> = ({ curr_user, onLogout }) => {
   const [user_list, setUser_list] = useState<Employee[]>([]);
-  const [curr_user, setCurr_user] = useState(null as Employee | null);
+  const [internal_user, setInternal_user] = useState<Employee | null>(curr_user);
 
   // Use local time to avoid timezone issues (e.g., when .toISOString() advances date)
   const getYYYYMMDD = (date: Date) => {
@@ -83,22 +87,23 @@ const UserReport: React.FC = () => {
 
   useEffect(() => {
     if (0 < user_list.length) {
-      setCurr_user(user_list[0]);
+      setInternal_user(user_list[0]);
     }
   }, [user_list]);
 
   useEffect(() => {
     //get workHour query and set it to work_hours
     const fetchWorkHours = async () => {
-      if (curr_user) {
-        const results = await get_work_hours_for_employee_between(curr_user.id, starting_date, ending_date);
+      const selected = internal_user ?? curr_user;
+      if (selected) {
+        const results = await get_work_hours_for_employee_between(selected.id, starting_date, ending_date);
         setWork_hours(results);
       } else {
         setWork_hours([]);
       }
     };
     fetchWorkHours();
-  }, [curr_user, starting_date, ending_date]);
+  }, [internal_user, curr_user, starting_date, ending_date]);
 
   return (
     <div className="report-container">
@@ -108,9 +113,10 @@ const UserReport: React.FC = () => {
           is_dropdown={true}
           is_user_change={true}
           user_list={user_list}
-          curr_user={curr_user}
-          curr_user_set={setCurr_user}
+          curr_user={internal_user ?? curr_user}
+          curr_user_set={setInternal_user}
           onUserListChange={reloadUserList}
+          onLogout={onLogout}
         />
 
         {/* Row 2: Current Rate, Change Rate, Change Password, Print */}

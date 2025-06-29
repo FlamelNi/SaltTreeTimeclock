@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./UserClockPage.css";
+import UserBar from "../../components/UserBar/UserBar";
+import { Employee } from "../../datatype";
 
-const UserClockPage: React.FC = () => {
+interface Props {
+  curr_user: Employee | null;
+  onLogout: () => void;
+}
+const UserClockPage: React.FC<Props> = ({ curr_user, onLogout }) => {
   const [now, setNow] = useState(new Date());
   const [clockedInSince, setClockedInSince] = useState<Date | null>(new Date());
   const [isClockedIn, setIsClockedIn] = useState(true);
@@ -24,6 +30,14 @@ const UserClockPage: React.FC = () => {
 
   return (
     <div className="clock-page">
+      <UserBar
+        is_dropdown={false}
+        is_user_change={false}
+        user_list={curr_user ? [curr_user] : []}
+        curr_user={curr_user}
+        curr_user_set={() => {}}
+        onLogout={onLogout}
+      />
       {clockedInSince && isClockedIn && <div className="clocked-in-since">Clocked in since: {formatTime(clockedInSince)}</div>}
 
       <div className="clock-status">
