@@ -38,7 +38,7 @@ const UserBar: React.FC<Props> = ({ is_dropdown, user_list, curr_user, curr_user
                     <Dropdown.Menu>
                       {user_list.map((user) => (
                         <Dropdown.Item
-                          key={`Dropdown_{user.id}`}
+                          key={`Dropdown_${user.id}`}
                           onClick={() => {
                             curr_user_set(user);
                           }}

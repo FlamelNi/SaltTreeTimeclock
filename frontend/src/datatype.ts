@@ -31,7 +31,7 @@ export class Employee {
   }
 }
 
-export class WorkHours {
+export class WorkHour {
   id: string;
   time_in: Timestamp;
   time_out: Timestamp;

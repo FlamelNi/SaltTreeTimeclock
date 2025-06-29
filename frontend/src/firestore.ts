@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, Timestamp } from "firebase/firestore";
-import { Employee } from "./datatype";
+import { getFirestore, collection, addDoc, getDocs, Timestamp, query, where, getDocs as getDocsQuery, DocumentData } from "firebase/firestore";
+import { Employee, WorkHour } from "./datatype";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBrBVP3ltNHcaU_hs0114heXjzXc-71ncE",
@@ -31,5 +31,27 @@ export async function add_new_employee_test() {
     password: "abc123", // hash this in real app!
     pay_rate: 17.8,
     is_admin: false,
+  });
+}
+
+// Query work_hour table by employee and date range
+export async function get_work_hours_for_employee_between(employee_id: string, starting: string, ending: string): Promise<WorkHour[]> {
+  // Convert YYYY-MM-DD to proper Timestamps
+  const startDateTime = new Date(starting + "T00:00:00");
+  const endDateTime = new Date(ending + "T23:59:59");
+  const startTimestamp = Timestamp.fromDate(startDateTime);
+  const endTimestamp = Timestamp.fromDate(endDateTime);
+
+  const workHourQuery = query(
+    collection(db, "work_hours"),
+    where("employee_id", "==", employee_id),
+    where("time_in", ">=", startTimestamp)
+    // where("time_out", "<=", endTimestamp)
+  );
+
+  const querySnapshot = await getDocsQuery(workHourQuery);
+  return querySnapshot.docs.map((doc) => {
+    const data = doc.data() as DocumentData;
+    return new WorkHour(doc.id, data.time_in, data.time_out, data.pay_rate, data.employee_id);
   });
 }
