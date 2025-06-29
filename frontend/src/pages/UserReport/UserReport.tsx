@@ -4,7 +4,13 @@ import Dropdown from "react-bootstrap/Dropdown";
 import "./UserReport.css";
 import UserBar from "../../components/UserBar/UserBar";
 import { Employee, WorkHour } from "../../datatype";
-import { add_new_employee_test, get_work_hours_for_employee_between, update_employee_rate, add_new_work_hour } from "../../firestore";
+import {
+  add_new_employee_test,
+  get_work_hours_for_employee_between,
+  update_employee_rate,
+  add_new_work_hour,
+  delete_work_hour,
+} from "../../firestore";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { Timestamp } from "firebase/firestore";
@@ -15,7 +21,13 @@ interface Props {
 const UserReport: React.FC<Props> = ({ user_list }) => {
   const [curr_user, setCurr_user] = useState(null as Employee | null);
 
-  const getYYYYMMDD = (date: Date) => date.toISOString().slice(0, 10);
+  // Use local time to avoid timezone issues (e.g., when .toISOString() advances date)
+  const getYYYYMMDD = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
   const today = new Date();
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
@@ -38,6 +50,12 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
   const [addTimeEnd, setAddTimeEnd] = useState(now.toTimeString().slice(0, 5));
   const [addTimeRate, setAddTimeRate] = useState<number | undefined>(undefined);
   const [addTimeError, setAddTimeError] = useState<string>("");
+
+  // Delete modal states
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedWorkHour, setSelectedWorkHour] = useState<WorkHour | null>(null);
+  const [deleting, setDeleting] = useState(false); // for loading state
+  const [deleteError, setDeleteError] = useState<string>("");
 
   // Helpers for formatting and calculations
   function formatDate(ts: any) {
@@ -183,7 +201,16 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
               <td>${wh.pay_rate.toFixed(2)}</td>
               <td>${getEarnings(wh.time_in, wh.time_out, wh.pay_rate)}</td>
               <td>
-                <Button className="delete-button" variant="danger">
+                <Button
+                  className="delete-button"
+                  variant="danger"
+                  onClick={() => {
+                    setSelectedWorkHour(wh);
+                    setDeleteError("");
+                    setShowDeleteModal(true);
+                  }}
+                  disabled={deleting}
+                >
                   🗑️ Delete
                 </Button>
               </td>
@@ -302,6 +329,82 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
             }}
           >
             Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Please confirm to delete this data</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedWorkHour && (
+            <table style={{ width: "100%", marginBottom: "0.5em" }}>
+              <tbody>
+                <tr>
+                  <td style={{ fontWeight: "bold", whiteSpace: "nowrap", paddingRight: 10, textAlign: "left" }}>Employee:</td>
+                  <td style={{ textAlign: "left" }}>{curr_user?.name}</td>
+                </tr>
+                <tr>
+                  <td style={{ fontWeight: "bold", whiteSpace: "nowrap", paddingRight: 10, textAlign: "left" }}>Date:</td>
+                  <td style={{ textAlign: "left" }}>{formatDate(selectedWorkHour.time_in)}</td>
+                </tr>
+                <tr>
+                  <td style={{ fontWeight: "bold", whiteSpace: "nowrap", paddingRight: 10, textAlign: "left" }}>Time in:</td>
+                  <td style={{ textAlign: "left" }}>{formatTime(selectedWorkHour.time_in)}</td>
+                </tr>
+                <tr>
+                  <td style={{ fontWeight: "bold", whiteSpace: "nowrap", paddingRight: 10, textAlign: "left" }}>Time out:</td>
+                  <td style={{ textAlign: "left" }}>{formatTime(selectedWorkHour.time_out)}</td>
+                </tr>
+                <tr>
+                  <td style={{ fontWeight: "bold", whiteSpace: "nowrap", paddingRight: 10, textAlign: "left" }}>Rate:</td>
+                  <td style={{ textAlign: "left" }}>${selectedWorkHour.pay_rate.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td style={{ fontWeight: "bold", whiteSpace: "nowrap", paddingRight: 10, textAlign: "left" }}>Earnings:</td>
+                  <td style={{ textAlign: "left" }}>
+                    ${getEarnings(selectedWorkHour.time_in, selectedWorkHour.time_out, selectedWorkHour.pay_rate)}
+                  </td>
+                </tr>
+                {deleteError && (
+                  <tr>
+                    <td colSpan={2} style={{ color: "red", textAlign: "center", paddingTop: 10 }}>
+                      {deleteError}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)} disabled={deleting}>
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={async () => {
+              if (!selectedWorkHour) return;
+              setDeleting(true);
+              try {
+                await delete_work_hour(selectedWorkHour.id);
+                setShowDeleteModal(false);
+                // Refresh list
+                if (curr_user) {
+                  const results = await get_work_hours_for_employee_between(curr_user.id, starting_date, ending_date);
+                  setWork_hours(results);
+                }
+                setSelectedWorkHour(null);
+                setDeleteError("");
+              } catch (err: any) {
+                setDeleteError("Unable to delete. Please try again.");
+              }
+              setDeleting(false);
+            }}
+            disabled={deleting}
+          >
+            Confirm
           </Button>
         </Modal.Footer>
       </Modal>

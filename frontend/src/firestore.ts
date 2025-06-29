@@ -13,6 +13,7 @@ import {
   updateDoc,
   doc,
   setDoc,
+  deleteDoc
 } from "firebase/firestore";
 
 // Update an employee's rate
@@ -29,6 +30,12 @@ export async function add_new_work_hour(employee_id: string, time_in: Timestamp,
     time_out,
     pay_rate,
   });
+}
+
+// Delete a work hour entry by ID
+export async function delete_work_hour(work_hour_id: string): Promise<void> {
+  // 'work_hours' is the collection name
+  await deleteDoc(doc(db, "work_hours", work_hour_id));
 }
 
 const firebaseConfig = {
