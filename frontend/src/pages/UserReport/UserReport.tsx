@@ -86,7 +86,15 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
 
         {/* Row 2: Current Rate, Change Rate, Change Password, Print */}
         <div className="header-row control-row">
-          <span className="rate-text">Current Rate: $18.50</span>
+          {curr_user == null ? (
+            <>
+              <span className="rate-text">Current Rate: Loading</span>
+            </>
+          ) : (
+            <>
+              <span className="rate-text">Current Rate: ${curr_user.pay_rate}</span>
+            </>
+          )}
           <Button
             className="blue-button"
             variant="primary"
