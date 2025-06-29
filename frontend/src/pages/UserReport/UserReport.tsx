@@ -17,7 +17,7 @@ interface Props {
 }
 const UserReport: React.FC<Props> = ({ curr_user, onLogout }) => {
   const [user_list, setUser_list] = useState<Employee[]>([]);
-  const [internal_user, setInternal_user] = useState<Employee | null>(curr_user);
+  const [currReportUser, setCurrReportUser] = useState<Employee | null>(curr_user);
 
   // Use local time to avoid timezone issues (e.g., when .toISOString() advances date)
   const getYYYYMMDD = (date: Date) => {
@@ -87,23 +87,22 @@ const UserReport: React.FC<Props> = ({ curr_user, onLogout }) => {
 
   useEffect(() => {
     if (0 < user_list.length) {
-      setInternal_user(user_list[0]);
+      setCurrReportUser(user_list[0]);
     }
   }, [user_list]);
 
   useEffect(() => {
     //get workHour query and set it to work_hours
     const fetchWorkHours = async () => {
-      const selected = internal_user ?? curr_user;
-      if (selected) {
-        const results = await get_work_hours_for_employee_between(selected.id, starting_date, ending_date);
+      if (currReportUser) {
+        const results = await get_work_hours_for_employee_between(currReportUser.id, starting_date, ending_date);
         setWork_hours(results);
       } else {
         setWork_hours([]);
       }
     };
     fetchWorkHours();
-  }, [internal_user, curr_user, starting_date, ending_date]);
+  }, [currReportUser, starting_date, ending_date]);
 
   return (
     <div className="report-container">
@@ -113,21 +112,21 @@ const UserReport: React.FC<Props> = ({ curr_user, onLogout }) => {
           is_dropdown={true}
           is_user_change={true}
           user_list={user_list}
-          curr_user={internal_user ?? curr_user}
-          curr_user_set={setInternal_user}
+          curr_user={currReportUser}
+          curr_user_set={setCurrReportUser}
           onUserListChange={reloadUserList}
           onLogout={onLogout}
         />
 
         {/* Row 2: Current Rate, Change Rate, Change Password, Print */}
         <div className="header-row control-row">
-          {curr_user == null ? (
+          {currReportUser == null ? (
             <>
               <span className="rate-text">Current Rate: Loading</span>
             </>
           ) : (
             <>
-              <span className="rate-text">Current Rate: ${curr_user.pay_rate}</span>
+              <span className="rate-text">Current Rate: ${currReportUser.pay_rate}</span>
             </>
           )}
           <Button

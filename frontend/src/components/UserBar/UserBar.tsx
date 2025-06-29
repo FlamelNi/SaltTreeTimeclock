@@ -94,7 +94,7 @@ const UserBar: React.FC<Props> = ({ is_dropdown, is_user_change, user_list, curr
           name: modalName,
           username: modalUsername,
           pay_rate: payRateNum,
-          is_admin: false,
+          // Do NOT update is_admin field on edit
         };
         if (editChangePassword && modalPassword) {
           updateFields.password_hash = await hashPassword(modalPassword);
