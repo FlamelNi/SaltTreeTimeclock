@@ -1,6 +1,35 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, Timestamp, query, where, getDocs as getDocsQuery, DocumentData } from "firebase/firestore";
 import { Employee, WorkHour } from "./datatype";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  Timestamp,
+  query,
+  where,
+  getDocs as getDocsQuery,
+  DocumentData,
+  updateDoc,
+  doc,
+  setDoc,
+} from "firebase/firestore";
+
+// Update an employee's rate
+export async function update_employee_rate(employee_id: string, new_rate: number): Promise<void> {
+  const employeeRef = doc(collection(db, "employees"), employee_id);
+  await updateDoc(employeeRef, { pay_rate: new_rate });
+}
+
+// Add a new work_hour entry
+export async function add_new_work_hour(employee_id: string, time_in: Timestamp, time_out: Timestamp, pay_rate: number): Promise<void> {
+  await addDoc(collection(db, "work_hours"), {
+    employee_id,
+    time_in,
+    time_out,
+    pay_rate,
+  });
+}
 
 const firebaseConfig = {
   apiKey: "AIzaSyBrBVP3ltNHcaU_hs0114heXjzXc-71ncE",
