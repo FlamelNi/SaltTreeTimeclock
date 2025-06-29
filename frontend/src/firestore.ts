@@ -55,7 +55,7 @@ export async function get_all_employees(): Promise<Employee[]> {
   const snapshot = await getDocs(collection(db, "employees"));
   const employees = snapshot.docs.map((doc) => {
     const data = doc.data();
-    return new Employee(doc.id, data.is_admin, data.name, data.password, data.pay_rate, data.username, false, Timestamp.now());
+    return new Employee(doc.id, data.is_admin, data.name, data.password, data.pay_rate, data.username, data.is_on_work, data.time_in);
   });
   return employees;
 }
@@ -74,7 +74,15 @@ export async function add_new_employee(name: string, username: string, password_
 // Update existing employee info (optionally new password hash)
 export async function update_employee(
   employee_id: string,
-  data: { name?: string; username?: string; password_hash?: string; pay_rate?: number; is_admin?: boolean }
+  data: {
+    name?: string;
+    username?: string;
+    password_hash?: string;
+    pay_rate?: number;
+    is_admin?: boolean;
+    is_on_work?: boolean;
+    time_in?: any;
+  }
 ): Promise<void> {
   const { password_hash, ...rest } = data;
   const update_data: any = { ...rest };
@@ -94,7 +102,7 @@ export async function get_employee_by_username(username: string): Promise<Employ
   const snap = await getDocs(q);
   if (snap.empty) return null;
   const data = snap.docs[0].data();
-  return new Employee(snap.docs[0].id, data.is_admin, data.name, data.password, data.pay_rate, data.username, false, Timestamp.now());
+  return new Employee(snap.docs[0].id, data.is_admin, data.name, data.password, data.pay_rate, data.username, data.is_on_work, data.time_in);
 }
 
 // Query work_hour table by employee and date range

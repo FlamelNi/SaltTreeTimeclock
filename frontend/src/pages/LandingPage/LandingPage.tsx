@@ -33,8 +33,9 @@ const LandingPage: React.FC = () => {
       setError("Username or password is incorrect");
       return;
     }
-    // Save session and redirect
+    // Save session and redirect, ensure object is what App.tsx expects
     window.localStorage.setItem("currentUser", JSON.stringify(user));
+    window.dispatchEvent(new Event("storage")); // Ensure App reads the update immediately
     if (user.is_admin) {
       navigate("/report");
     } else {

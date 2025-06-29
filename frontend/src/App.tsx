@@ -7,12 +7,32 @@ import LandingPage from "./pages/LandingPage/LandingPage";
 import UserReport from "./pages/UserReport/UserReport";
 import UserClockPage from "./pages/UserClockPage/UserClockPage";
 import { Employee } from "./datatype";
+import { Timestamp } from "firebase/firestore";
 
 function getCurrentUser(): Employee | null {
   try {
     const data = window.localStorage.getItem("currentUser");
     if (!data) return null;
-    return JSON.parse(data);
+    const obj = JSON.parse(data);
+    // Hydrate the timestamp if it's a plain object!
+    let hydratedTimeIn = obj.time_in;
+    if (
+      hydratedTimeIn &&
+      typeof hydratedTimeIn === "object" &&
+      "seconds" in hydratedTimeIn
+    ) {
+      hydratedTimeIn = new Timestamp(hydratedTimeIn.seconds, hydratedTimeIn.nanoseconds);
+    }
+    return new Employee(
+      obj.id,
+      obj.is_admin,
+      obj.name,
+      obj.password,
+      obj.pay_rate,
+      obj.username,
+      obj.is_on_work,
+      hydratedTimeIn
+    );
   } catch {
     return null;
   }
