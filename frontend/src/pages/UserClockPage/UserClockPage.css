@@ -1,3 +1,7 @@
+.clock-page-margin {
+  margin: 50px;
+}
+
 .clock-page {
   display: flex;
   justify-content: center;

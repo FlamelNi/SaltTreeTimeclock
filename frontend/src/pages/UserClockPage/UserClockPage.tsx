@@ -29,31 +29,35 @@ const UserClockPage: React.FC<Props> = ({ curr_user, onLogout }) => {
   const formatTime = (date: Date | null) => date?.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) ?? "";
 
   return (
-    <div className="clock-page">
-      <UserBar
-        is_dropdown={false}
-        is_user_change={false}
-        user_list={curr_user ? [curr_user] : []}
-        curr_user={curr_user}
-        curr_user_set={() => {}}
-        onLogout={onLogout}
-      />
-      {clockedInSince && isClockedIn && <div className="clocked-in-since">Clocked in since: {formatTime(clockedInSince)}</div>}
+    <>
+      <div className="clock-page-margin">
+        <UserBar
+          is_dropdown={false}
+          is_user_change={false}
+          user_list={curr_user ? [curr_user] : []}
+          curr_user={curr_user}
+          curr_user_set={() => {}}
+          onLogout={onLogout}
+        />
+        <div className="clock-page">
+          {clockedInSince && isClockedIn && <div className="clocked-in-since">Clocked in since: {formatTime(clockedInSince)}</div>}
 
-      <div className="clock-status">
-        <h2>{isClockedIn ? "Clocked in" : "Clocked out"}</h2>
-        <div className="clock-now">{now.toLocaleString()}</div>
+          <div className="clock-status">
+            <h2>{isClockedIn ? "Clocked in" : "Clocked out"}</h2>
+            <div className="clock-now">{now.toLocaleString()}</div>
 
-        <div className="clock-buttons">
-          <button onClick={handleClockIn} disabled={isClockedIn}>
-            Clock In
-          </button>
-          <button onClick={handleClockOut} disabled={!isClockedIn}>
-            Clock Out
-          </button>
+            <div className="clock-buttons">
+              <button onClick={handleClockIn} disabled={isClockedIn}>
+                Clock In
+              </button>
+              <button onClick={handleClockOut} disabled={!isClockedIn}>
+                Clock Out
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
