@@ -23,14 +23,14 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
 
   // Helpers for formatting and calculations
   function formatDate(ts: any) {
-    if (!ts || !ts.toDate) return '';
+    if (!ts || !ts.toDate) return "";
     const date = ts.toDate();
     return date.toLocaleDateString();
   }
   function formatTime(ts: any) {
-    if (!ts || !ts.toDate) return '';
+    if (!ts || !ts.toDate) return "";
     const date = ts.toDate();
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   }
   function getDurationMinutes(start: any, end: any) {
     if (!start || !end || !start.toDate || !end.toDate) return 0;
@@ -107,7 +107,7 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
             <th>Rate</th>
             <th>Earnings</th>
             <th>
-              <Button className="delete-button" variant="danger">
+              <Button className="delete-button" variant="danger" hidden={true}>
                 🗑️ Delete
               </Button>
             </th>
@@ -122,9 +122,13 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
               <td>
                 {(() => {
                   const mins = getDurationMinutes(wh.time_in, wh.time_out);
-                  const h = Math.floor(mins/60);
-                  const m = Math.round(mins%60);
-                  return `${h}h ${m}m`;
+                  let h = Math.floor(mins / 60);
+                  let m = Math.round(mins % 60);
+                  if (m === 60) {
+                    h += 1;
+                    m = 0;
+                  }
+                  return `${h}h${m > 0 ? ` ${m}m` : ""}`;
                 })()}
               </td>
               <td>${wh.pay_rate.toFixed(2)}</td>
@@ -139,7 +143,9 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
         </tbody>
       </table>
 
-      <div className="total-earnings">Total Earnings: ${work_hours.reduce((acc, wh) => acc + parseFloat(getEarnings(wh.time_in, wh.time_out, wh.pay_rate)), 0).toFixed(2)}</div>
+      <div className="total-earnings">
+        Total Earnings: ${work_hours.reduce((acc, wh) => acc + parseFloat(getEarnings(wh.time_in, wh.time_out, wh.pay_rate)), 0).toFixed(2)}
+      </div>
       {/* <Button onClick={add_new_employee_test}>Add Test</Button> */}
     </div>
   );

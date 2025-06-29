@@ -45,8 +45,8 @@ export async function get_work_hours_for_employee_between(employee_id: string, s
   const workHourQuery = query(
     collection(db, "work_hours"),
     where("employee_id", "==", employee_id),
-    where("time_in", ">=", startTimestamp)
-    // where("time_out", "<=", endTimestamp)
+    where("time_in", ">=", startTimestamp),
+    where("time_out", "<=", endTimestamp)
   );
 
   const querySnapshot = await getDocsQuery(workHourQuery);
