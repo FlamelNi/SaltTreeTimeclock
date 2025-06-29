@@ -24,8 +24,8 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
   // Use local time to avoid timezone issues (e.g., when .toISOString() advances date)
   const getYYYYMMDD = (date: Date) => {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
   const today = new Date();
@@ -130,7 +130,7 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
             Change Password
           </Button>
           <Button className="print-button" variant="outline-secondary">
-            🖨️ Print
+            🖨️
           </Button>
         </div>
       </div>
@@ -175,7 +175,7 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
             <th>Earnings</th>
             <th>
               <Button className="delete-button" variant="danger" hidden={true}>
-                🗑️ Delete
+                Delete
               </Button>
             </th>
           </tr>
@@ -211,7 +211,7 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
                   }}
                   disabled={deleting}
                 >
-                  🗑️ Delete
+                  Delete
                 </Button>
               </td>
             </tr>
@@ -257,7 +257,7 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
               if (curr_user) {
                 await update_employee_rate(curr_user.id, changeRateValue);
                 // Update user_list in parent (if possible!)
-                curr_user.pay_rate = changeRateValue;
+                curr_user.pay_rate = Math.round(changeRateValue * 100) / 100;
                 setShowChangeRateModal(false);
               }
             }}
@@ -379,11 +379,11 @@ const UserReport: React.FC<Props> = ({ user_list }) => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)} disabled={deleting}>
+          <Button variant="danger" onClick={() => setShowDeleteModal(false)} disabled={deleting}>
             Cancel
           </Button>
           <Button
-            variant="danger"
+            variant="primary"
             onClick={async () => {
               if (!selectedWorkHour) return;
               setDeleting(true);

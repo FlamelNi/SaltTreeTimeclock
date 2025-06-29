@@ -65,7 +65,7 @@ const UserBar: React.FC<Props> = ({ is_dropdown, user_list, curr_user, curr_user
         </div>
         <div>
           <Button className="logout-button" variant="outline-danger">
-            🔁 Log out
+            Log out
           </Button>
         </div>
       </div>
